@@ -1,0 +1,1528 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="LedgerLite is a cash-aware sales, receipts, quotes, follow-up, inventory, and reporting tool for Zimbabwean SMEs.">
+    <meta name="theme-color" content="#0aa3d8">
+    <meta property="og:title" content="LedgerLite">
+    <meta property="og:description" content="Cash-aware SME tools for sales, customer balances, quotes, follow-ups, inventory, and daily close reports.">
+    <meta property="og:type" content="website">
+    <title>LedgerLite | Cash-aware SME tools</title>
+    <link rel="icon" href="danova-logo.png">
+    <link rel="apple-touch-icon" href="danova-logo.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section id="authScreen" class="auth-screen">
+      <div class="auth-panel">
+        <div class="auth-main">
+          <div>
+            <img src="danova-logo.png" alt="Danova Technologies logo">
+            <p class="eyebrow">LedgerLite</p>
+            <h1>Run your business from one clean ledger.</h1>
+            <p class="auth-copy">Sales, receipts, balances, stock, quotes, follow-ups, and daily cash-up for cash-aware businesses.</p>
+          </div>
+          <form id="loginForm" class="auth-form">
+            <div class="auth-mode-switch" role="tablist" aria-label="Account access">
+              <button id="signInMode" class="active" data-auth-mode="signin" type="button" role="tab" aria-selected="true">Sign in</button>
+              <button id="createAccount" data-auth-mode="signup" type="button" role="tab" aria-selected="false">Create account</button>
+            </div>
+            <div class="auth-form-heading">
+              <strong id="authFormTitle">Welcome back</strong>
+              <span id="authFormCopy">Enter the account you created for this business.</span>
+            </div>
+            <label>
+              Email address
+              <input id="loginIdentity" type="email" placeholder="owner@business.co.zw" required>
+            </label>
+            <label>
+              Password
+              <input id="loginPassword" type="password" placeholder="At least 8 characters" minlength="8" required>
+            </label>
+            <label id="loginConfirmWrap" class="hidden">Confirm password<input id="loginConfirmPassword" type="password" placeholder="Repeat password" minlength="8"></label>
+            <button id="authSubmit" class="primary" type="submit">Sign in securely</button>
+            <button id="resetPassword" class="text-button" type="button">Forgot password?</button>
+            <button id="resendConfirmation" class="text-button hidden" type="button">Resend confirmation email</button>
+            <div class="auth-divider"><span>or explore first</span></div>
+            <button id="demoLogin" class="ghost" type="button">Try demo workspace</button>
+          </form>
+          <div id="cloudAuthStatus" class="cloud-auth-status" role="status" aria-live="polite">Checking secure cloud availability...</div>
+          <div id="authHelpActions" class="auth-help-actions hidden">
+            <button id="authCreateHelp" class="secondary" type="button">Create an account</button>
+            <button id="authResetHelp" class="text-button" type="button">Reset password</button>
+          </div>
+        </div>
+        <div class="auth-preview" aria-label="LedgerLite preview">
+          <div class="preview-top">
+            <span>Today</span>
+            <strong>$19.00 collected</strong>
+          </div>
+          <div class="preview-grid">
+            <article>
+              <span>Outstanding</span>
+              <strong>$60.50</strong>
+            </article>
+            <article>
+              <span>Open quotes</span>
+              <strong>3</strong>
+            </article>
+          </div>
+          <div class="preview-card">
+            <span>Follow-up</span>
+            <strong>Rudo Superette</strong>
+            <p>$42.50 balance</p>
+          </div>
+          <div class="preview-card">
+            <span>Daily close</span>
+            <strong>Ready to copy</strong>
+            <p>Cash, mobile money, expenses, and credit summary</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="danova-logo.png" alt="Danova Technologies logo">
+        <div>
+          <strong>LedgerLite</strong>
+          <span>Cash-aware SME tools</span>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main">
+        <span class="nav-section">Operate</span>
+        <button class="nav-item active" data-view="dashboard" type="button">Dashboard</button>
+        <button class="nav-item" data-view="sale" type="button">New Sale</button>
+        <button class="nav-item" data-view="quotes" type="button">Quotes</button>
+        <button class="nav-item" data-view="followups" type="button">Follow-ups</button>
+        <button class="nav-item" data-view="recurring" type="button">Recurring Billing</button>
+        <button class="nav-item" data-view="payments" type="button">Payments</button>
+        <span class="nav-section">Manage</span>
+        <button class="nav-item" data-view="customers" type="button">Customers</button>
+        <button class="nav-item" data-view="inventory" type="button">Inventory</button>
+        <button class="nav-item" data-view="expenses" type="button">Expenses</button>
+        <span class="nav-section">Review</span>
+        <button class="nav-item" data-view="reports" type="button">Reports</button>
+        <button class="nav-item" data-view="notifications" type="button">Notifications</button>
+        <button class="nav-item" data-view="activity" type="button">Activity</button>
+        <span class="nav-section">Growth</span>
+        <button class="nav-item" data-view="outreach" type="button">Outreach</button>
+        <span class="nav-section">Workspace</span>
+        <button class="nav-item" data-view="cloud-status" type="button">Cloud Status</button>
+        <button class="nav-item" data-view="billing" type="button">Plan &amp; Billing</button>
+        <button class="nav-item" data-view="settings" type="button">Settings</button>
+      </nav>
+      <div class="sidebar-footer">
+        <span id="cloudSyncStatus" class="cloud-sync-status">Local device</span>
+        <span>Powered by Danova Technologies</span>
+        <button id="logout" type="button">Log out</button>
+        <button id="resetDemo" type="button">Reset demo</button>
+      </div>
+    </aside>
+
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Zimbabwe MVP</p>
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-actions">
+          <div class="global-search">
+            <input id="globalSearch" type="search" placeholder="Search customers, receipts, quotes...">
+            <div id="globalSearchResults" class="global-search-results hidden"></div>
+          </div>
+          <button id="businessAlertButton" class="alert-button" data-view-jump="notifications" type="button">
+            Alerts <span id="businessAlertCount">0</span>
+          </button>
+          <span id="connectionStatus" class="connection-status">Online</span>
+          <div class="business-switch">
+            <span>Business</span>
+            <strong id="activeBusinessName">Business setup needed</strong>
+            <small id="activeBusinessMeta">Add details in settings</small>
+          </div>
+        </div>
+      </header>
+
+      <section id="cloudConflictBanner" class="cloud-conflict-banner hidden" role="alert" aria-live="assertive">
+        <div>
+          <strong>Cloud changes need your review</strong>
+          <span id="cloudConflictCopy">This business was updated on another device.</span>
+        </div>
+        <div class="cloud-conflict-actions">
+          <button id="useCloudVersion" class="secondary" type="button">Use cloud copy</button>
+          <button id="keepDeviceVersion" class="primary" type="button">Keep this device</button>
+        </div>
+      </section>
+
+      <section id="dashboard" class="view active-view" aria-labelledby="dashboard-title">
+        <h2 id="dashboard-title" class="sr-only">Dashboard</h2>
+        <section class="dashboard-command-bar" aria-label="Dashboard actions">
+          <div>
+            <p class="eyebrow">Next actions</p>
+            <h2>Run today's work</h2>
+          </div>
+          <div class="quick-actions" aria-label="Quick actions">
+            <button class="primary" data-view-jump="sale" type="button">New sale</button>
+            <button class="ghost" data-view-jump="quotes" type="button">Quote</button>
+            <button class="ghost" data-view-jump="followups" type="button">Follow up</button>
+            <button class="ghost" data-view-jump="payments" type="button">Receive payment</button>
+          </div>
+        </section>
+        <div class="metric-grid">
+          <article class="metric">
+            <span>Today collected</span>
+            <strong id="todayCollected">$0.00</strong>
+            <small>Cash, mobile money, bank</small>
+          </article>
+          <article class="metric">
+            <span>Outstanding</span>
+            <strong id="outstanding">$0.00</strong>
+            <small>Customer balances</small>
+          </article>
+          <article class="metric">
+            <span>Stock value</span>
+            <strong id="stockValue">$0.00</strong>
+            <small>Current inventory</small>
+          </article>
+          <article class="metric">
+            <span>Monthly revenue</span>
+            <strong id="monthRevenue">$0.00</strong>
+            <small>This month</small>
+          </article>
+        </div>
+        <section class="panel health-panel">
+          <div class="health-score">
+            <span>Business Health</span>
+            <strong id="healthScore">0%</strong>
+            <small id="healthStatus">Needs setup</small>
+          </div>
+          <div class="health-summary">
+            <div class="panel-header">
+              <h2>Health Checklist</h2>
+              <span class="pill" id="healthRiskCount">0 actions</span>
+            </div>
+            <div id="healthChecks" class="health-checks"></div>
+          </div>
+        </section>
+        <section class="panel smart-insights-panel">
+          <div class="panel-header">
+            <h2>Smart Insights</h2>
+            <span class="pill" id="insightCount">0 insights</span>
+          </div>
+          <div id="smartInsights" class="insight-grid"></div>
+        </section>
+
+        <section class="panel daily-close-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Daily Close</h2>
+              <span id="dailyCloseDate">Today</span>
+            </div>
+            <button id="copyDailyClose" class="ghost" type="button">Copy summary</button>
+          </div>
+          <div class="daily-close-grid">
+            <article>
+              <span>Received today</span>
+              <strong id="closeReceived">$0.00</strong>
+            </article>
+            <article>
+              <span>Expenses today</span>
+              <strong id="closeExpenses">$0.00</strong>
+            </article>
+            <article>
+              <span>Credit given</span>
+              <strong id="closeCredit">$0.00</strong>
+            </article>
+            <article>
+              <span>Net cash</span>
+              <strong id="closeNet">$0.00</strong>
+            </article>
+          </div>
+          <div id="dailyCloseNotes" class="daily-close-notes"></div>
+        </section>
+
+        <details class="setup-drawer">
+          <summary>
+            <div>
+              <p class="eyebrow">Workspace setup</p>
+              <h2>Setup, app readiness, and business tools</h2>
+            </div>
+            <span class="pill" id="onboardingProgress">0/6 complete</span>
+          </summary>
+          <div class="setup-drawer-content">
+            <div class="dashboard-overview-grid">
+              <section class="business-kit" aria-labelledby="businessKitTitle">
+                <div>
+                  <p class="eyebrow">Business toolkit</p>
+                  <h2 id="businessKitTitle">Ready for your business type</h2>
+                  <p id="businessKitCopy">LedgerLite adapts to shops, salons, schools, clinics, churches, landlords, farms, and service businesses.</p>
+                </div>
+                <div id="businessKitList" class="kit-list"></div>
+                <button id="applyPreset" class="primary" type="button">Load starter setup</button>
+              </section>
+              <section class="install-card" aria-labelledby="installTitle">
+                <div>
+                  <p class="eyebrow">App readiness</p>
+                  <h2 id="installTitle">Install LedgerLite</h2>
+                  <p id="installCopy">Home-screen access, offline cache, and local backup controls.</p>
+                </div>
+                <div class="install-status-grid">
+                  <span id="installStatus">Install available when supported</span>
+                  <span id="offlineStatus">Offline cache ready after first visit</span>
+                  <span id="backupStatus">Backup recommended</span>
+                </div>
+                <div class="install-actions">
+                  <button id="installApp" class="primary" type="button" disabled>Install app</button>
+                  <button id="backupNow" class="ghost" type="button">Backup data</button>
+                </div>
+              </section>
+            </div>
+            <section class="onboarding-panel" aria-labelledby="onboardingTitle">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Getting started</p>
+                  <h2 id="onboardingTitle">Set up your workspace</h2>
+                </div>
+              </div>
+              <div id="onboardingChecklist" class="checklist"></div>
+            </section>
+          </div>
+        </details>
+
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Needs Attention</h2>
+              <button class="ghost" data-view-jump="customers" type="button">Open</button>
+            </div>
+            <div id="attentionList" class="attention-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Recent Sales</h2>
+              <button class="ghost" data-view-jump="sale" type="button">Add</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Receipt</th>
+                    <th>Customer</th>
+                    <th>Paid</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="recentSales"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="sale" class="view" aria-labelledby="sale-title">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="sale-title">Record Sale</h2>
+              <span class="pill" id="receiptNumber">Receipt</span>
+            </div>
+            <form id="saleForm" class="form-grid">
+              <label>
+                <span id="saleCustomerLabel">Customer</span>
+                <select id="saleCustomer"></select>
+              </label>
+              <label>
+                New customer
+                <input id="manualCustomer" type="text" placeholder="Type if not listed">
+              </label>
+              <label>
+                <span id="saleItemLabel">Item</span>
+                <select id="saleItem"></select>
+              </label>
+              <label>
+                New item/service
+                <input id="manualItem" type="text" placeholder="Type if not listed">
+              </label>
+              <label>
+                Manual price
+                <input id="manualItemPrice" type="number" min="0" step="0.01" placeholder="Only for new item">
+              </label>
+              <label>
+                Quantity
+                <input id="saleQuantity" type="number" min="1" step="1" value="1" required>
+              </label>
+              <button id="addSaleLine" class="secondary wide" type="button">Add item to sale</button>
+              <div class="wide document-line-builder" aria-live="polite">
+                <div class="line-builder-heading"><strong>Sale items</strong><span id="saleDraftTotal">$0.00</span></div>
+                <div id="saleDraftLines" class="draft-line-list"><p>No items added yet.</p></div>
+              </div>
+              <label>
+                Currency
+                <select id="saleCurrency">
+                  <option value="USD">USD</option>
+                  <option value="ZiG">ZiG</option>
+                  <option value="ZAR">ZAR</option>
+                  <option value="Innbucks">Innbucks</option>
+                </select>
+              </label>
+              <label>
+                Payment method
+                <select id="paymentMethod">
+                  <option>Cash</option>
+                  <option>EcoCash</option>
+                  <option>Innbucks</option>
+                  <option>Bank Transfer</option>
+                  <option>Swipe</option>
+                </select>
+              </label>
+              <label>
+                Amount paid
+                <input id="amountPaid" type="number" min="0" step="0.01" placeholder="0.00">
+              </label>
+              <label class="wide">
+                Notes
+                <input id="saleNotes" type="text" placeholder="Optional">
+              </label>
+              <button id="saveSale" class="primary wide" type="submit">Save sale</button>
+            </form>
+          </section>
+
+          <section class="panel receipt-panel">
+            <div class="panel-header">
+              <h2>Receipt Preview</h2>
+              <div class="receipt-actions">
+                <button id="copyReceipt" class="ghost" type="button">Copy</button>
+                <button id="whatsappReceipt" class="ghost" type="button">WhatsApp</button>
+                <button id="printReceipt" class="ghost" type="button">Print</button>
+              </div>
+            </div>
+            <div id="receiptPreview" class="receipt"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="quotes" class="view" aria-labelledby="quotes-title">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="quotes-title">Create Quote</h2>
+              <span class="pill" id="quoteNumber">Quote</span>
+            </div>
+            <form id="quoteForm" class="form-grid">
+              <label>
+                Customer
+                <select id="quoteCustomer"></select>
+              </label>
+              <label>
+                New customer
+                <input id="quoteManualCustomer" type="text" placeholder="Type if not listed">
+              </label>
+              <label>
+                Item/service
+                <select id="quoteItem"></select>
+              </label>
+              <label>
+                New item/service
+                <input id="quoteManualItem" type="text" placeholder="Type if not listed">
+              </label>
+              <label>
+                Manual price
+                <input id="quoteManualPrice" type="number" min="0" step="0.01" placeholder="Only for new item">
+              </label>
+              <label>
+                Quantity
+                <input id="quoteQuantity" type="number" min="1" step="1" value="1" required>
+              </label>
+              <button id="addQuoteLine" class="secondary wide" type="button">Add item to quote</button>
+              <div class="wide document-line-builder" aria-live="polite">
+                <div class="line-builder-heading"><strong>Quote items</strong><span id="quoteDraftTotal">$0.00</span></div>
+                <div id="quoteDraftLines" class="draft-line-list"><p>No items added yet.</p></div>
+              </div>
+              <label>
+                Currency
+                <select id="quoteCurrency">
+                  <option value="USD">USD</option>
+                  <option value="ZiG">ZiG</option>
+                  <option value="ZAR">ZAR</option>
+                  <option value="Innbucks">Innbucks</option>
+                </select>
+              </label>
+              <label>
+                Valid for
+                <select id="quoteValidDays">
+                  <option value="7">7 days</option>
+                  <option value="14">14 days</option>
+                  <option value="30">30 days</option>
+                </select>
+              </label>
+              <label class="wide">
+                Notes
+                <input id="quoteNotes" type="text" placeholder="Optional terms or delivery notes">
+              </label>
+              <button id="saveQuote" class="primary wide" type="submit">Save quote</button>
+            </form>
+          </section>
+
+          <section class="panel receipt-panel">
+            <div class="panel-header">
+              <h2>Quote Preview</h2>
+              <div class="receipt-actions">
+                <button id="copyQuote" class="ghost" type="button">Copy</button>
+                <button id="whatsappQuote" class="ghost" type="button">WhatsApp</button>
+                <button id="printQuote" class="ghost" type="button">Print</button>
+              </div>
+            </div>
+            <div id="quotePreview" class="receipt"></div>
+          </section>
+        </div>
+
+        <section class="panel quote-history-panel">
+          <div class="panel-header">
+            <h2>Saved Quotes</h2>
+            <span class="pill" id="quoteCount">0 quotes</span>
+          </div>
+          <div id="quoteList" class="quote-list"></div>
+        </section>
+      </section>
+
+      <section id="followups" class="view" aria-labelledby="followups-title">
+        <section class="panel followup-hero">
+          <div>
+            <p class="eyebrow">Collections workspace</p>
+            <h2 id="followups-title">Follow-up Center</h2>
+            <p>Track unpaid balances and open quotes, then send WhatsApp-ready messages from one place.</p>
+          </div>
+          <div class="followup-stats">
+            <article>
+              <span>Owing accounts</span>
+              <strong id="followupDebtorCount">0</strong>
+            </article>
+            <article>
+              <span>Open quotes</span>
+              <strong id="followupQuoteCount">0</strong>
+            </article>
+            <article>
+              <span>Total follow-up value</span>
+              <strong id="followupValue">$0.00</strong>
+            </article>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Payment Follow-ups</h2>
+              <button class="ghost" data-view-jump="payments" type="button">Receive payment</button>
+            </div>
+            <div id="paymentFollowups" class="followup-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Quote Follow-ups</h2>
+              <button class="ghost" data-view-jump="quotes" type="button">Create quote</button>
+            </div>
+            <div id="quoteFollowups" class="followup-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="payments" class="view" aria-labelledby="payments-title">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="payments-title">Receive Payment</h2>
+              <span class="pill">Balance control</span>
+            </div>
+            <form id="paymentForm" class="form-grid">
+              <label>
+                Customer
+                <select id="paymentCustomer" required></select>
+              </label>
+              <label>
+                Amount received
+                <input id="paymentAmount" type="number" min="0.01" step="0.01" required>
+              </label>
+              <label>
+                Currency
+                <select id="paymentCurrency">
+                  <option value="USD">USD</option>
+                  <option value="ZiG">ZiG</option>
+                  <option value="ZAR">ZAR</option>
+                  <option value="Innbucks">Innbucks</option>
+                </select>
+              </label>
+              <label>
+                Payment method
+                <select id="paymentMethodCollect"></select>
+              </label>
+              <label class="wide">
+                Note
+                <input id="paymentNote" type="text" placeholder="Optional">
+              </label>
+              <button class="primary wide" type="submit">Save payment</button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Recent Payments</h2>
+              <span class="pill" id="paymentCount">0</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="recentPayments"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="customers" class="view" aria-labelledby="customers-title">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="customers-title">Customers</h2>
+              <span class="pill" id="customerCount">0</span>
+            </div>
+            <form id="customerForm" class="form-grid compact-form">
+              <label>
+                Name
+                <input id="customerName" type="text" required>
+              </label>
+              <label>
+                Phone
+                <input id="customerPhone" type="tel" placeholder="+263..." required>
+              </label>
+              <button class="primary wide" type="submit">Add customer</button>
+            </form>
+            <div class="import-row">
+              <button id="importCustomersBtn" class="ghost" type="button">Import customers CSV</button>
+              <button id="downloadCustomersTemplate" class="ghost" type="button">Template</button>
+              <input id="importCustomersFile" class="file-input" type="file" accept=".csv,text/csv">
+            </div>
+            <div class="filter-row">
+              <input id="customerSearch" type="search" placeholder="Search customers, phone, balance...">
+              <select id="customerFilter">
+                <option value="all">All accounts</option>
+                <option value="owing">Owing</option>
+                <option value="settled">Settled</option>
+              </select>
+            </div>
+            <div id="customerList" class="stack-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="customerProfileTitle">Account Profile</h2>
+              <span class="pill" id="customerProfileStatus">Select account</span>
+            </div>
+            <div id="customerProfile" class="empty-state">Select a customer with a balance.</div>
+          </section>
+        </div>
+      </section>
+
+      <section id="recurring" class="view" aria-labelledby="recurring-title">
+        <section class="recurring-hero">
+          <div>
+            <p class="eyebrow">Monthly customer payments</p>
+            <h2 id="recurring-title">Recurring Billing &amp; Reminders</h2>
+            <p>Schedule monthly services and prepare customer reminders before each payment is due.</p>
+          </div>
+          <div class="delivery-readiness">
+            <span>Delivery mode</span>
+            <strong>WhatsApp approval</strong>
+            <small>Automatic API connection coming with cloud accounts</small>
+          </div>
+        </section>
+
+        <div class="recurring-metrics">
+          <article><span>Active agreements</span><strong id="recurringActiveCount">0</strong></article>
+          <article><span>Monthly scheduled</span><strong id="recurringMonthlyValue">$0.00</strong></article>
+          <article><span>Ready to send</span><strong id="remindersReadyCount">0</strong></article>
+          <article><span>Sent this month</span><strong id="remindersSentCount">0</strong></article>
+        </div>
+
+        <div class="split recurring-setup-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Create monthly agreement</h2>
+                <p class="panel-copy">Assign a service, payment day, and reminder schedule to a customer.</p>
+              </div>
+              <span class="pill">Owner setup</span>
+            </div>
+            <form id="recurringForm" class="form-grid">
+              <label>Customer<select id="recurringCustomer" required></select></label>
+              <label>Service or plan<input id="recurringService" type="text" placeholder="e.g. Monthly internet" required></label>
+              <label>Monthly amount<input id="recurringAmount" type="number" min="0.01" step="0.01" required></label>
+              <label>
+                Currency
+                <select id="recurringCurrency">
+                  <option value="USD">USD</option><option value="ZiG">ZiG</option><option value="ZAR">ZAR</option><option value="Innbucks">Innbucks</option>
+                </select>
+              </label>
+              <label>Payment due each month<select id="recurringBillingDay"></select></label>
+              <label>
+                Remind before due date
+                <select id="recurringLeadDays">
+                  <option value="1">1 day before</option><option value="3" selected>3 days before</option><option value="5">5 days before</option><option value="7">7 days before</option>
+                </select>
+              </label>
+              <label class="wide consent-check">
+                <input id="recurringConsent" type="checkbox" required>
+                <span>The customer has agreed to receive payment reminders on WhatsApp.</span>
+              </label>
+              <button class="primary wide" type="submit">Start monthly reminders</button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div><h2>Active agreements</h2><p class="panel-copy">Monthly services currently being monitored.</p></div>
+              <span id="recurringContractCount" class="pill">0</span>
+            </div>
+            <div id="recurringContractList" class="stack-list"></div>
+          </section>
+        </div>
+
+        <section class="panel reminder-queue-panel">
+          <div class="panel-header">
+            <div><h2>Reminder queue</h2><p class="panel-copy">LedgerLite prepares reminders automatically. Review and send them through WhatsApp.</p></div>
+            <select id="reminderFilter" aria-label="Filter reminders">
+              <option value="ready">Ready to send</option><option value="upcoming">Upcoming</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="all">All reminders</option>
+            </select>
+          </div>
+          <div class="automation-note">
+            <strong>Automatic schedule is active</strong>
+            <span>Unattended delivery will activate after the WhatsApp Business API and cloud scheduler are connected.</span>
+          </div>
+          <div id="reminderQueue" class="reminder-queue"></div>
+        </section>
+      </section>
+
+      <section id="inventory" class="view" aria-labelledby="inventory-title">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="inventory-title">Inventory</h2>
+              <span class="pill" id="itemCount">0 items</span>
+            </div>
+            <form id="itemForm" class="form-grid compact-form">
+              <label>
+                <span id="itemNameLabel">Item name</span>
+                <input id="itemName" type="text" required>
+              </label>
+              <label>
+                Price USD
+                <input id="itemPrice" type="number" min="0" step="0.01" required>
+              </label>
+              <label>
+                Stock
+                <input id="itemStock" type="number" min="0" step="1" required>
+              </label>
+              <button class="primary wide" type="submit">Add item</button>
+            </form>
+            <div class="import-row">
+              <button id="importItemsBtn" class="ghost" type="button">Import inventory CSV</button>
+              <button id="downloadItemsTemplate" class="ghost" type="button">Template</button>
+              <input id="importItemsFile" class="file-input" type="file" accept=".csv,text/csv">
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Stock List</h2>
+              <span class="pill">Live</span>
+            </div>
+            <div class="table-wrap">
+              <div class="filter-row table-filter">
+                <input id="inventorySearch" type="search" placeholder="Search inventory or services...">
+                <select id="inventoryFilter">
+                  <option value="all">All</option>
+                  <option value="low">Low stock</option>
+                  <option value="service">Services</option>
+                  <option value="stocked">Stock items</option>
+                </select>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="expenses" class="view" aria-labelledby="expenses-title">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="expenses-title">Record Expense</h2>
+              <span class="pill">Cash out</span>
+            </div>
+            <form id="expenseForm" class="form-grid">
+              <label>
+                Category
+                <select id="expenseCategory">
+                  <option>Stock purchase</option>
+                  <option>Rent</option>
+                  <option>Transport</option>
+                  <option>Utilities</option>
+                  <option>Salaries</option>
+                  <option>Repairs</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label>
+                Amount
+                <input id="expenseAmount" type="number" min="0.01" step="0.01" required>
+              </label>
+              <label>
+                Currency
+                <select id="expenseCurrency">
+                  <option value="USD">USD</option>
+                  <option value="ZiG">ZiG</option>
+                  <option value="ZAR">ZAR</option>
+                  <option value="Innbucks">Innbucks</option>
+                </select>
+              </label>
+              <label>
+                Paid by
+                <select id="expenseMethod"></select>
+              </label>
+              <label class="wide">
+                Description
+                <input id="expenseDescription" type="text" placeholder="e.g. Bought stock from supplier">
+              </label>
+              <button class="primary wide" type="submit">Save expense</button>
+            </form>
+            <div class="import-row">
+              <button id="importExpensesBtn" class="ghost" type="button">Import expenses CSV</button>
+              <button id="downloadExpensesTemplate" class="ghost" type="button">Template</button>
+              <input id="importExpensesFile" class="file-input" type="file" accept=".csv,text/csv">
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Recent Expenses</h2>
+              <span class="pill" id="expenseCount">0</span>
+            </div>
+            <div class="table-wrap">
+              <div class="filter-row table-filter">
+                <input id="expenseSearch" type="search" placeholder="Search expenses...">
+                <select id="expenseFilter">
+                  <option value="all">All categories</option>
+                  <option>Stock purchase</option>
+                  <option>Rent</option>
+                  <option>Transport</option>
+                  <option>Utilities</option>
+                  <option>Salaries</option>
+                  <option>Repairs</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="recentExpenses"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="reports" class="view" aria-labelledby="reports-title">
+        <section class="panel">
+          <div class="panel-header">
+            <h2 id="reports-title">Reports</h2>
+            <div class="report-actions">
+              <button id="exportSalesCsv" class="ghost" type="button">Export sales CSV</button>
+              <button id="exportCustomersCsv" class="ghost" type="button">Export customers CSV</button>
+              <button id="exportExpensesCsv" class="ghost" type="button">Export expenses CSV</button>
+              <button id="importCustomersBtnReports" class="ghost" type="button">Import customers</button>
+              <button id="importItemsBtnReports" class="ghost" type="button">Import inventory</button>
+              <button id="importExpensesBtnReports" class="ghost" type="button">Import expenses</button>
+            </div>
+          </div>
+          <div class="report-grid">
+            <article class="metric">
+              <span>Total sales</span>
+              <strong id="reportTotalSales">$0.00</strong>
+              <small>All recorded sales</small>
+            </article>
+            <article class="metric">
+              <span>Total received</span>
+              <strong id="reportTotalReceived">$0.00</strong>
+              <small>Sales paid + payments</small>
+            </article>
+            <article class="metric">
+              <span>Total expenses</span>
+              <strong id="reportTotalExpenses">$0.00</strong>
+              <small>Recorded cash out</small>
+            </article>
+            <article class="metric">
+              <span>Net cash</span>
+              <strong id="reportNetCash">$0.00</strong>
+              <small>Received minus expenses</small>
+            </article>
+            <article class="metric">
+              <span>Total outstanding</span>
+              <strong id="reportOutstanding">$0.00</strong>
+              <small>Customer balances</small>
+            </article>
+            <article class="metric">
+              <span>Low stock items</span>
+              <strong id="reportLowStock">0</strong>
+              <small>5 units or fewer</small>
+            </article>
+          </div>
+        </section>
+
+        <div class="dashboard-grid report-sections">
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Top Debtors</h2>
+              <span class="pill">Follow up</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="reportDebtors"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Low Stock</h2>
+              <span class="pill">Restock</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Stock</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="reportStock"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="notifications" class="view" aria-labelledby="notifications-title">
+        <section class="notification-hero">
+          <div>
+            <p class="eyebrow">Business control centre</p>
+            <h2 id="notifications-title">Notifications</h2>
+            <p>See what needs attention before customers, cash flow, or stock are affected.</p>
+          </div>
+          <div class="notification-actions">
+            <button id="enableBrowserNotifications" class="primary" type="button">Enable device notifications</button>
+            <button id="markNotificationsRead" class="ghost" type="button">Mark all reviewed</button>
+          </div>
+        </section>
+
+        <div class="notification-metrics">
+          <article><span>Urgent</span><strong id="urgentNotificationCount">0</strong></article>
+          <article><span>Action needed</span><strong id="actionNotificationCount">0</strong></article>
+          <article><span>For review</span><strong id="reviewNotificationCount">0</strong></article>
+          <article><span>Device alerts</span><strong id="deviceNotificationStatus">Off</strong></article>
+        </div>
+
+        <section class="panel notification-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Business alerts</h2>
+              <p class="panel-copy">Prioritised from your live LedgerLite records.</p>
+            </div>
+            <select id="notificationFilter" aria-label="Filter notifications">
+              <option value="all">All alerts</option>
+              <option value="urgent">Urgent</option>
+              <option value="action">Action needed</option>
+              <option value="review">For review</option>
+            </select>
+          </div>
+          <div id="notificationList" class="notification-list"></div>
+        </section>
+
+        <section class="panel delivery-status-panel">
+          <div>
+            <p class="eyebrow">Delivery status</p>
+            <h2>How business notifications work</h2>
+          </div>
+          <div class="delivery-status-grid">
+            <article><strong>In-app</strong><span>Active whenever LedgerLite is opened.</span></article>
+            <article><strong>Device</strong><span>Available after the business enables browser permission.</span></article>
+            <article><strong>Cloud push</strong><span>Planned with secure accounts and the messaging backend.</span></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="activity" class="view" aria-labelledby="activity-title">
+        <section class="panel">
+          <div class="panel-header">
+            <h2 id="activity-title">Activity</h2>
+            <button id="exportData" class="ghost" type="button">Export JSON</button>
+          </div>
+          <div class="filter-row">
+            <input id="activitySearch" type="search" placeholder="Search activity...">
+            <select id="activityFilter">
+              <option value="all">All activity</option>
+              <option value="sale">Sales</option>
+              <option value="payment">Payments</option>
+              <option value="expense">Expenses</option>
+            </select>
+          </div>
+          <div id="activityFeed" class="activity-feed"></div>
+        </section>
+      </section>
+
+      <section id="outreach" class="view" aria-labelledby="outreach-title">
+        <section class="panel outreach-hero">
+          <div>
+            <p class="eyebrow">Go-to-market</p>
+            <h2 id="outreach-title">Outreach Starter Kit</h2>
+            <p>Start speaking to real businesses, collect feedback, and book LedgerLite demos with a simple weekly rhythm.</p>
+          </div>
+          <div class="outreach-stats">
+            <article><span>Weekly target</span><strong id="weeklyLeadProgress">0 / 25 leads</strong></article>
+            <article><span>Next milestone</span><strong id="nextOutreachMilestone">Book first demo</strong></article>
+            <article><span>Due today</span><strong id="leadsDueToday">0 leads</strong></article>
+          </div>
+        </section>
+
+        <section class="pipeline-metrics" aria-label="Outreach metrics">
+          <article><span>Total leads</span><strong id="metricTotalLeads">0</strong></article>
+          <article><span>Contacted</span><strong id="metricContacted">0</strong></article>
+          <article><span>Demos booked</span><strong id="metricDemos">0</strong></article>
+          <article><span>Trials</span><strong id="metricTrials">0</strong></article>
+          <article><span>Won</span><strong id="metricWon">0</strong></article>
+          <article><span>Win rate</span><strong id="metricWinRate">0%</strong></article>
+        </section>
+
+        <div class="outreach-grid lead-tracker-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Add Lead</h2>
+              <span class="pill">Pipeline</span>
+            </div>
+            <form id="leadForm" class="form-grid">
+              <label>
+                Business name
+                <input id="leadBusiness" type="text" placeholder="e.g. Sunrise Stores" required>
+              </label>
+              <label>
+                Contact
+                <input id="leadContact" type="text" placeholder="+263... or owner name">
+              </label>
+              <label>
+                Business type
+                <select id="leadType">
+                  <option>Retail shop</option>
+                  <option>Salon or barber</option>
+                  <option>School or training centre</option>
+                  <option>Clinic or health practice</option>
+                  <option>Landlord or property manager</option>
+                  <option>Church or ministry</option>
+                  <option>Farm or produce seller</option>
+                  <option>Other service business</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="leadStatus">
+                  <option>New lead</option>
+                  <option>Contacted</option>
+                  <option>Demo booked</option>
+                  <option>Trial setup</option>
+                  <option>Won</option>
+                  <option>Not now</option>
+                </select>
+              </label>
+              <label>
+                Next action
+                <select id="leadNextAction">
+                  <option>Send opener</option>
+                  <option>Call owner</option>
+                  <option>Visit business</option>
+                  <option>Book demo</option>
+                  <option>Set up trial</option>
+                  <option>Follow up payment</option>
+                </select>
+              </label>
+              <label>
+                Follow-up date
+                <input id="leadDueDate" type="date">
+              </label>
+              <label class="wide">
+                Notes
+                <input id="leadNotes" type="text" placeholder="Pain point, promise, next step">
+              </label>
+              <button class="primary wide" type="submit">Save lead</button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Lead Pipeline</h2>
+              <div class="lead-tools">
+                <span class="pill" id="leadCount">0 leads</span>
+                <button id="exportLeadsCsv" class="ghost" type="button">Export</button>
+                <button id="importLeadsBtn" class="ghost" type="button">Import</button>
+                <button id="downloadLeadsTemplate" class="ghost" type="button">Template</button>
+                <input id="importLeadsFile" class="file-input" type="file" accept=".csv,text/csv">
+              </div>
+            </div>
+            <div class="filter-row table-filter">
+              <input id="leadSearch" type="search" placeholder="Search leads...">
+              <select id="leadFilter">
+                <option value="all">All statuses</option>
+                <option>New lead</option>
+                <option>Contacted</option>
+                <option>Demo booked</option>
+                <option>Trial setup</option>
+                <option>Won</option>
+                <option>Not now</option>
+              </select>
+            </div>
+            <div id="leadList" class="lead-list"></div>
+          </section>
+        </div>
+
+        <div class="outreach-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Priority Businesses</h2>
+              <span class="pill">Start here</span>
+            </div>
+            <div class="sector-list">
+              <article><strong>Retail shops</strong><span>Manual books, credit sales, stock checks, daily cash-up.</span></article>
+              <article><strong>Salons and barbers</strong><span>Client balances, service records, WhatsApp reminders.</span></article>
+              <article><strong>Schools and tutors</strong><span>Fee tracking, parent reminders, receipts, reports.</span></article>
+              <article><strong>Churches</strong><span>Member giving, event contributions, simple reports.</span></article>
+              <article><strong>Landlords</strong><span>Tenant balances, rent receipts, payment follow-up.</span></article>
+              <article><strong>Clinics</strong><span>Consultation payments, patient balances, follow-up records.</span></article>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Demo Flow</h2>
+              <span class="pill">10 minutes</span>
+            </div>
+            <ol class="demo-flow">
+              <li><strong>Ask about their books.</strong><span>How do you record sales, debts, and stock today?</span></li>
+              <li><strong>Show one sale.</strong><span>Create a receipt with cash or credit balance.</span></li>
+              <li><strong>Show follow-ups.</strong><span>Open unpaid customers and copy a WhatsApp reminder.</span></li>
+              <li><strong>Show daily close.</strong><span>Copy the end-of-day cash summary.</span></li>
+              <li><strong>Ask for a trial.</strong><span>Offer to set up their first customers and items.</span></li>
+            </ol>
+          </section>
+        </div>
+
+        <section class="panel outreach-scripts">
+          <div class="panel-header">
+            <h2>Copy-ready Messages</h2>
+            <span class="pill">WhatsApp or email</span>
+          </div>
+          <div class="script-grid">
+            <article class="script-card">
+              <strong>Retail shop opener</strong>
+              <p>Hello, I am building LedgerLite, a simple business app for Zimbabwean shops that still use cash and manual books. It helps track sales, customer balances, stock, receipts, and daily cash-up. Can I show you a quick 10-minute demo and set up a sample for your shop?</p>
+              <button class="ghost" type="button" data-copy-script="retail">Copy</button>
+            </article>
+            <article class="script-card">
+              <strong>Service business opener</strong>
+              <p>Hello, I am working on LedgerLite, a simple tool for salons, barbers, tutors, clinics, and service businesses to record payments, balances, receipts, and WhatsApp follow-ups. Would you be open to a short demo this week?</p>
+              <button class="ghost" type="button" data-copy-script="service">Copy</button>
+            </article>
+            <article class="script-card">
+              <strong>Follow-up after demo</strong>
+              <p>Thank you for looking at LedgerLite today. Based on what you showed me, the first setup I recommend is customers, common items/services, receipts, and balance follow-ups. I can help you test it for a few days and adjust it to your workflow.</p>
+              <button class="ghost" type="button" data-copy-script="afterDemo">Copy</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Weekly Outreach Plan</h2>
+            <span class="pill">Simple rhythm</span>
+          </div>
+          <div class="plan-grid">
+            <article><strong>Monday</strong><span>List 25 nearby businesses and collect phone numbers.</span></article>
+            <article><strong>Tuesday</strong><span>Send 10 WhatsApp openers and visit 3 businesses.</span></article>
+            <article><strong>Wednesday</strong><span>Run demos and note objections.</span></article>
+            <article><strong>Thursday</strong><span>Set up 2 trial businesses with real data.</span></article>
+            <article><strong>Friday</strong><span>Follow up, ask for payment willingness, and improve the app.</span></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="cloud-status" class="view" aria-labelledby="cloud-status-title">
+        <section class="cloud-ops-hero">
+          <div>
+            <p class="eyebrow">Owner control centre</p>
+            <h2 id="cloud-status-title">Cloud Status</h2>
+            <p>Live workspace protection, synchronization, subscription, team, and messaging health.</p>
+          </div>
+          <div class="cloud-ops-actions">
+            <span id="cloudHealthUpdated">Waiting for cloud connection</span>
+            <button id="refreshCloudHealth" class="primary" type="button">Refresh status</button>
+          </div>
+        </section>
+
+        <div class="cloud-health-metrics">
+          <article><span>Cloud sync</span><strong id="cloudMetricSync">Local</strong><small id="cloudMetricSyncMeta">Not connected</small></article>
+          <article><span>Team access</span><strong id="cloudMetricTeam">0 users</strong><small id="cloudMetricTeamMeta">Workspace members</small></article>
+          <article><span>Messaging</span><strong id="cloudMetricMessages">0 queued</strong><small id="cloudMetricMessagesMeta">Scheduled reminders</small></article>
+          <article><span>Subscription</span><strong id="cloudMetricPlan">Starter</strong><small id="cloudMetricPlanMeta">Local trial</small></article>
+        </div>
+
+        <div class="cloud-ops-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <div><h2>Production readiness</h2><p class="panel-copy">Controls checked against this signed-in workspace.</p></div>
+              <span id="cloudReadinessScore" class="pill">0/5 ready</span>
+            </div>
+            <div id="cloudReadiness" class="cloud-readiness-list"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-header">
+              <div><h2>Recent cloud operations</h2><p class="panel-copy">Latest protected changes and delivery activity.</p></div>
+              <span class="pill">Owner view</span>
+            </div>
+            <div id="cloudOperations" class="cloud-operations-list"></div>
+          </section>
+        </div>
+
+        <section class="panel cloud-boundary-panel">
+          <div><p class="eyebrow">Security boundary</p><h2>Business data stays inside its workspace</h2></div>
+          <p>Cloud Status only reads records allowed by the signed-in user's workspace membership and role. Danova Technologies' server credentials are never included in the browser.</p>
+        </section>
+      </section>
+
+      <section id="billing" class="view" aria-labelledby="billing-title">
+        <section class="billing-hero">
+          <div>
+            <p class="eyebrow">Workspace subscription</p>
+            <h2 id="billing-title">A plan that can grow with your business</h2>
+            <p>Review workspace usage, choose a billing cycle, and request activation using the payment method that suits your business.</p>
+          </div>
+          <div class="billing-cycle" role="group" aria-label="Billing cycle">
+            <button class="cycle-option active" data-billing-cycle="monthly" type="button">Monthly</button>
+            <button class="cycle-option" data-billing-cycle="annual" type="button">Annual <span>2 months free</span></button>
+          </div>
+        </section>
+
+        <section class="billing-overview">
+          <article class="current-plan-card">
+            <div class="plan-card-heading">
+              <div>
+                <span class="plan-label">Current plan</span>
+                <h3 id="currentPlanName">Starter trial</h3>
+              </div>
+              <span id="subscriptionStatus" class="status-chip status-trial">Trial active</span>
+            </div>
+            <p id="planStatusCopy">Explore LedgerLite before selecting a paid plan.</p>
+            <div class="plan-renewal">
+              <span id="planDateLabel">Trial ends</span>
+              <strong id="planRenewalDate">--</strong>
+            </div>
+            <div id="pendingPlanNotice" class="pending-plan-notice hidden"></div>
+          </article>
+          <article class="workspace-usage-card">
+            <div class="panel-header">
+              <h3>Workspace usage</h3>
+              <span id="usagePlanLabel" class="pill">Starter limits</span>
+            </div>
+            <div id="workspaceUsage" class="usage-list"></div>
+          </article>
+        </section>
+
+        <section class="plan-picker" aria-labelledby="plans-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Simple USD pricing</p>
+              <h2 id="plans-title">Choose your plan</h2>
+            </div>
+            <p>Prices are per business workspace. You can change plans as your team grows.</p>
+          </div>
+          <div id="pricingPlans" class="pricing-grid"></div>
+        </section>
+
+        <section class="panel payment-preference-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Payment &amp; activation</h2>
+              <p class="panel-copy">Choose how you would like to pay. Danova Technologies will confirm activation after payment is verified.</p>
+            </div>
+            <span class="pill">No automatic charge</span>
+          </div>
+          <form id="billingForm" class="billing-form">
+            <label>
+              Preferred payment method
+              <select id="billingPaymentMethod">
+                <option>EcoCash USD</option>
+                <option>Innbucks</option>
+                <option>USD bank transfer</option>
+                <option>Cash</option>
+              </select>
+            </label>
+            <label>
+              Billing contact
+              <input id="billingContact" type="tel" placeholder="+263..." required>
+            </label>
+            <button id="requestActivation" class="primary" type="submit">Request plan activation</button>
+          </form>
+          <p class="billing-footnote">A request does not process a payment. Automated checkout and cloud enforcement will be connected in the production billing release.</p>
+        </section>
+      </section>
+
+      <section id="settings" class="view" aria-labelledby="settings-title">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-header">
+              <h2 id="settings-title">Business Profile</h2>
+              <span class="pill">Owner setup</span>
+            </div>
+            <form id="businessForm" class="form-grid">
+              <label>
+                Business name
+                <input id="businessName" type="text" required>
+              </label>
+              <label>
+                Business type
+                <select id="businessType" required>
+                  <option>Retail shop</option>
+                  <option>Salon or barber</option>
+                  <option>School or training centre</option>
+                  <option>Clinic or health practice</option>
+                  <option>Landlord or property manager</option>
+                  <option>Church or ministry</option>
+                  <option>Farm or produce seller</option>
+                  <option>Other service business</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label id="businessTypeOtherWrap" class="hidden">
+                Specify business type
+                <input id="businessTypeOther" type="text" placeholder="Type business category">
+              </label>
+              <label>
+                WhatsApp number
+                <input id="businessPhone" type="tel" placeholder="+263..." required>
+              </label>
+              <label>
+                Location
+                <input id="businessLocation" type="text" placeholder="Harare, Bulawayo..." required>
+              </label>
+              <label>
+                Primary currency
+                <select id="businessCurrency">
+                  <option value="USD">USD</option>
+                  <option value="ZiG">ZiG</option>
+                  <option value="ZAR">ZAR</option>
+                  <option value="Innbucks">Innbucks</option>
+                </select>
+              </label>
+              <label>
+                Accepted payments
+                <input id="businessPayments" type="text" placeholder="Cash, EcoCash, Innbucks, Bank Transfer">
+              </label>
+              <button class="primary wide" type="submit">Save business profile</button>
+            </form>
+            <div class="setup-note">
+              <strong id="settingsPresetTitle">Starter setup available</strong>
+              <span id="settingsPresetCopy">Load starter customers and products/services for this business type.</span>
+              <button id="applyPresetSettings" class="ghost" type="button">Load starter setup</button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Staff & Permissions</h2>
+              <span class="pill" id="staffCount">0 staff</span>
+            </div>
+            <form id="staffForm" class="form-grid compact-form">
+              <label>
+                Staff name
+                <input id="staffName" type="text" required>
+              </label>
+              <label>
+                Email address
+                <input id="staffEmail" type="email" placeholder="staff@business.co.zw">
+              </label>
+              <label>
+                Role
+                <select id="staffRole">
+                  <option>Owner</option>
+                  <option>Manager</option>
+                  <option>Cashier</option>
+                  <option>Accountant</option>
+                  <option>Salesperson</option>
+                </select>
+              </label>
+              <button class="primary wide" type="submit">Add staff member</button>
+            </form>
+            <div id="staffList" class="stack-list"></div>
+          </section>
+        </div>
+        <section class="panel settings-data-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Data Protection</h2>
+              <p class="panel-copy">Back up records, restore from another device, or reset demo data.</p>
+            </div>
+            <span class="pill">Local device</span>
+          </div>
+          <div class="data-actions">
+            <button id="backupData" class="primary" type="button">Download backup</button>
+            <button id="restoreDataBtn" class="ghost" type="button">Restore backup</button>
+            <button id="clearData" class="ghost danger-action" type="button">Clear all data</button>
+            <input id="restoreDataFile" class="file-input" type="file" accept=".json,application/json">
+          </div>
+        </section>
+        <section class="panel cloud-security-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Cloud Security &amp; Privacy</h2>
+              <p class="panel-copy">Manage cloud exports, audit-ready records, and workspace deletion requests.</p>
+            </div>
+            <span id="cloudSecurityStatus" class="pill">Local mode</span>
+          </div>
+          <div class="security-control-grid">
+            <article>
+              <strong>Workspace isolation</strong>
+              <span>Each business is protected by membership-based database policies.</span>
+            </article>
+            <article>
+              <strong>Audit history</strong>
+              <span>Cloud changes and sensitive actions are recorded for owners.</span>
+            </article>
+            <article>
+              <strong>Data rights</strong>
+              <span>Owners can export their workspace or request secure deletion.</span>
+            </article>
+          </div>
+          <div class="data-actions">
+            <button id="cloudExportData" class="ghost" type="button">Export cloud data</button>
+            <button id="requestWorkspaceDeletion" class="ghost danger-action" type="button">Request workspace deletion</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <section id="setupModal" class="modal-backdrop" aria-labelledby="setup-title" aria-modal="true" role="dialog">
+      <div class="modal-panel onboarding-modal">
+        <div class="onboarding-heading">
+          <div><p class="eyebrow">Workspace setup</p><h2 id="setup-title">Prepare your business</h2></div>
+          <span id="setupStepLabel">Step 1 of 4</span>
+        </div>
+        <div class="setup-progress" aria-hidden="true">
+          <span class="active"></span><span></span><span></span><span></span>
+        </div>
+        <form id="setupForm">
+          <fieldset class="setup-step active" data-setup-step="1">
+            <legend>Business identity</legend>
+            <p>These details appear on receipts, quotes, reminders, and reports.</p>
+            <div class="form-grid">
+              <label>Business name<input id="setupBusinessName" type="text" placeholder="e.g. Sunrise Stores" required></label>
+              <label>
+                Business type
+                <select id="setupBusinessType">
+                  <option>Retail shop</option><option>Salon or barber</option><option>School or training centre</option><option>Clinic or health practice</option><option>Landlord or property manager</option><option>Church or ministry</option><option>Farm or produce seller</option><option>Other</option>
+                </select>
+              </label>
+              <label id="setupBusinessTypeOtherWrap" class="hidden wide">Specify business type<input id="setupBusinessTypeOther" type="text" placeholder="Type business category"></label>
+              <label>WhatsApp number<input id="setupBusinessPhone" type="tel" placeholder="+263..." required></label>
+              <label>Location<input id="setupBusinessLocation" type="text" placeholder="City or town" required></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="setup-step" data-setup-step="2">
+            <legend>Money &amp; payments</legend>
+            <p>Choose the currency and payment methods used in daily business.</p>
+            <div class="form-grid">
+              <label>
+                Primary currency
+                <select id="setupBusinessCurrency"><option value="USD">USD</option><option value="ZiG">ZiG</option><option value="ZAR">ZAR</option><option value="Innbucks">Innbucks</option></select>
+              </label>
+              <div class="wide setup-payment-options">
+                <span>Accepted payment methods</span>
+                <label><input type="checkbox" name="setupPayment" value="Cash" checked> Cash</label>
+                <label><input type="checkbox" name="setupPayment" value="EcoCash"> EcoCash</label>
+                <label><input type="checkbox" name="setupPayment" value="Innbucks"> Innbucks</label>
+                <label><input type="checkbox" name="setupPayment" value="Bank Transfer"> Bank transfer</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="setup-step" data-setup-step="3">
+            <legend>Starting data</legend>
+            <p>Begin clean or load a small set of products and services for your sector.</p>
+            <div class="setup-choice-grid">
+              <label class="setup-choice"><input type="radio" name="setupStartMode" value="blank" checked><span><strong>Blank workspace</strong><small>Start with no customers, sales, or inventory.</small></span></label>
+              <label class="setup-choice"><input type="radio" name="setupStartMode" value="starter"><span><strong>Starter catalogue</strong><small>Add editable example items for the selected business type.</small></span></label>
+            </div>
+            <div class="setup-import-note"><strong>Already using spreadsheets?</strong><span>Customer, inventory, expense, and outreach CSV imports are available after setup.</span></div>
+          </fieldset>
+
+          <fieldset class="setup-step" data-setup-step="4">
+            <legend>Review &amp; launch</legend>
+            <p>Confirm the workspace before starting the 14-day trial.</p>
+            <div id="setupReview" class="setup-review"></div>
+            <label class="setup-confirm"><input id="setupTermsConfirmed" type="checkbox" required><span>I confirm these business details and the customer data responsibilities in the Privacy Notice.</span></label>
+          </fieldset>
+
+          <div class="setup-navigation">
+            <button id="setupBack" class="ghost hidden" type="button">Back</button>
+            <button id="setupNext" class="primary" type="button">Continue</button>
+            <button id="setupSubmit" class="primary hidden" type="submit">Launch workspace</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="cloud-config.js"></script>
+    <script src="cloud.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
