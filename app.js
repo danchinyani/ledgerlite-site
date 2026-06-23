@@ -771,6 +771,73 @@ function balanceReminderText(customer) {
   return `Hello ${customer.name}, this is a friendly reminder from ${currentBusinessName()}. Your current balance is ${money(customer.balance, state.business.currency)}. Please make payment when possible. Thank you.`;
 }
 
+function customerStatementDetails(customer) {
+  if (!customer) return null;
+  const sales = state.sales.filter((sale) => sale.customerId === customer.id);
+  const payments = state.payments.filter((payment) => payment.customerId === customer.id);
+  const events = [
+    ...sales.map((sale) => ({
+      createdAt: sale.createdAt,
+      type: "Sale",
+      reference: sale.receipt,
+      detail: lineText(documentLines(sale), sale.currency).join("; "),
+      debit: Number(sale.total || 0),
+      credit: Number(sale.paid || 0)
+    })),
+    ...payments.map((payment) => ({
+      createdAt: payment.createdAt,
+      type: "Payment",
+      reference: payment.method,
+      detail: payment.note || "Payment received",
+      debit: 0,
+      credit: Number(payment.amount || 0)
+    }))
+  ].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  let runningBalance = 0;
+  const rows = events.map((event) => {
+    runningBalance += event.debit - event.credit;
+    return { ...event, balance: runningBalance };
+  });
+  const totalSales = sales.reduce((sum, sale) => sum + Number(sale.total || 0), 0);
+  const totalPaid = sales.reduce((sum, sale) => sum + Number(sale.paid || 0), 0) + payments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+  return {
+    businessName: currentBusinessName(),
+    businessMeta: [state.business.type, state.business.location, state.business.phone].filter(Boolean).join(" - "),
+    customerName: customer.name,
+    customerPhone: customer.phone || "",
+    date: todayStamp(new Date().toISOString()),
+    currency: state.business.currency || "USD",
+    totalSales,
+    totalPaid,
+    balance: Number(customer.balance || 0),
+    rows
+  };
+}
+
+function customerStatementText(customer) {
+  const details = customerStatementDetails(customer);
+  if (!details) return "";
+  return [
+    `${details.businessName}`,
+    details.businessMeta,
+    "",
+    `Customer statement: ${details.customerName}`,
+    details.customerPhone ? `Phone: ${details.customerPhone}` : "",
+    `Date: ${details.date}`,
+    "",
+    `Total sales: ${money(details.totalSales, details.currency)}`,
+    `Total paid: ${money(details.totalPaid, details.currency)}`,
+    `Balance due: ${money(details.balance, details.currency)}`,
+    "",
+    "Activity:",
+    ...(details.rows.length
+      ? details.rows.map((row) => `${todayStamp(row.createdAt)} - ${row.type} ${row.reference}: ${row.detail} | Debit ${money(row.debit, details.currency)} | Credit ${money(row.credit, details.currency)} | Balance ${money(row.balance, details.currency)}`)
+      : ["No transactions recorded yet."]),
+    "",
+    "Powered by Danova Technologies"
+  ].filter((line, index, list) => line !== "" || list[index - 1] !== "").join("\n");
+}
+
 function quoteReminderText(quote) {
   const customer = findCustomer(quote.customerId);
   const lines = documentLines(quote);
@@ -2430,10 +2497,12 @@ function renderCustomers() {
 
 function renderCustomerProfile() {
   const customer = findCustomer(selectedCustomerId);
+  const profilePanel = els.customerProfile.closest(".panel");
   if (!customer) {
     els.customerProfileStatus.textContent = "Select account";
     els.customerProfile.className = "empty-state";
     els.customerProfile.textContent = "Select an account to view history.";
+    profilePanel?.classList.remove("statement-panel");
     return;
   }
 
@@ -2447,6 +2516,8 @@ function renderCustomerProfile() {
   ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   const message = balanceReminderText(customer);
   const link = customer.phone ? whatsappUrl(customer.phone, message) : "";
+  const statement = customerStatementDetails(customer);
+  profilePanel?.classList.add("statement-panel");
   els.customerProfileStatus.textContent = customer.balance > 0 ? "Owes balance" : "Settled";
   els.customerProfile.className = "account-profile";
   els.customerProfile.innerHTML = `
@@ -2461,9 +2532,51 @@ function renderCustomerProfile() {
     </div>
     <div class="profile-actions">
       <button class="ghost" id="profileReceivePayment" type="button">Receive payment</button>
+      <button class="ghost" id="copyCustomerStatement" type="button">Copy statement</button>
+      <button class="ghost" id="printCustomerStatement" type="button">Print statement</button>
+      ${customer.phone ? `<button class="ghost" id="whatsappCustomerStatement" type="button">WhatsApp statement</button>` : ""}
       ${link ? `<a class="whatsapp-link" href="${link}" target="_blank" rel="noopener">Open WhatsApp</a>` : ""}
     </div>
     ${customer.balance > 0 ? `<div class="reminder-message">${message}</div>` : `<div class="reminder-message">This account has no outstanding balance.</div>`}
+    <section class="account-statement-print" aria-label="Customer statement preview">
+      <div class="statement-topbar"></div>
+      <header class="statement-header">
+        <div>
+          <span>Customer statement</span>
+          <h3>${escapeHtml(statement.businessName)}</h3>
+          <p>${escapeHtml(statement.businessMeta || "Business account statement")}</p>
+        </div>
+        <div class="statement-balance ${statement.balance > 0 ? "is-owing" : "is-clear"}">
+          <span>Balance due</span>
+          <strong>${money(statement.balance, statement.currency)}</strong>
+        </div>
+      </header>
+      <div class="statement-meta">
+        <article><span>Customer</span><strong>${escapeHtml(statement.customerName)}</strong><small>${escapeHtml(statement.customerPhone || "No phone saved")}</small></article>
+        <article><span>Statement date</span><strong>${statement.date}</strong><small>${statement.rows.length} transaction${statement.rows.length === 1 ? "" : "s"}</small></article>
+        <article><span>Total sales</span><strong>${money(statement.totalSales, statement.currency)}</strong><small>Total paid ${money(statement.totalPaid, statement.currency)}</small></article>
+      </div>
+      <div class="table-wrap statement-table-wrap">
+        <table class="statement-table">
+          <thead><tr><th>Date</th><th>Activity</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead>
+          <tbody>
+            ${statement.rows.length ? statement.rows.map((row) => `
+              <tr>
+                <td>${todayStamp(row.createdAt)}</td>
+                <td><strong>${escapeHtml(row.type)} ${escapeHtml(row.reference)}</strong><small>${escapeHtml(row.detail)}</small></td>
+                <td>${row.debit ? money(row.debit, statement.currency) : "-"}</td>
+                <td>${row.credit ? money(row.credit, statement.currency) : "-"}</td>
+                <td><strong>${money(row.balance, statement.currency)}</strong></td>
+              </tr>
+            `).join("") : `<tr><td colspan="5">No transactions recorded yet.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+      <footer class="statement-footer">
+        <span>Generated by LedgerLite</span>
+        <strong>Powered by Danova Technologies</strong>
+      </footer>
+    </section>
     <div>
       <h2>History</h2>
       <div class="timeline">
@@ -2491,6 +2604,18 @@ function renderCustomerProfile() {
   document.querySelector("#profileReceivePayment")?.addEventListener("click", () => {
     showView("payments");
     els.paymentCustomer.value = customer.id;
+  });
+  document.querySelector("#copyCustomerStatement")?.addEventListener("click", async () => {
+    await copyText(customerStatementText(customer));
+    alert("Customer statement copied.");
+  });
+  document.querySelector("#whatsappCustomerStatement")?.addEventListener("click", () => {
+    window.open(whatsappUrl(customer.phone, customerStatementText(customer)), "_blank", "noopener");
+  });
+  document.querySelector("#printCustomerStatement")?.addEventListener("click", () => {
+    document.body.classList.add("print-statement-mode");
+    window.print();
+    window.setTimeout(() => document.body.classList.remove("print-statement-mode"), 500);
   });
 }
 
