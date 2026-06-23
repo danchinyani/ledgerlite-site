@@ -1,4 +1,4 @@
-const cacheName = "ledgerlite-v21";
+const cacheName = "ledgerlite-v22";
 const appShell = [
   "./",
   "./index.html",

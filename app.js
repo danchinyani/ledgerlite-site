@@ -2004,10 +2004,10 @@ function renderDashboard() {
       const customerName = customer?.name || sale.manualCustomerName || "Walk-in";
       return `
         <tr>
-          <td>${sale.receipt}</td>
-          <td>${customerName}</td>
-          <td class="paid">${money(sale.paid, sale.currency)}</td>
-          <td class="${sale.balance > 0 ? "balance" : "paid"}">${money(sale.balance, sale.currency)}</td>
+          <td data-label="Receipt">${sale.receipt}</td>
+          <td data-label="Customer">${customerName}</td>
+          <td data-label="Paid" class="paid">${money(sale.paid, sale.currency)}</td>
+          <td data-label="Balance" class="${sale.balance > 0 ? "balance" : "paid"}">${money(sale.balance, sale.currency)}</td>
         </tr>
       `;
     })
