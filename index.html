@@ -511,6 +511,23 @@
           </div>
         </section>
 
+        <section class="panel collections-aging-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Collections Aging</h2>
+              <p class="panel-copy">Prioritize the accounts that have been outstanding the longest.</p>
+            </div>
+            <button id="copyCollectionsSummary" class="ghost" type="button">Copy collections summary</button>
+          </div>
+          <div class="aging-buckets">
+            <article class="aging-bucket bucket-current"><span>0-7 days</span><strong id="agingCurrent">$0.00</strong><small>Current</small></article>
+            <article class="aging-bucket bucket-watch"><span>8-14 days</span><strong id="agingWatch">$0.00</strong><small>Watch</small></article>
+            <article class="aging-bucket bucket-late"><span>15-30 days</span><strong id="agingLate">$0.00</strong><small>Late</small></article>
+            <article class="aging-bucket bucket-critical"><span>31+ days</span><strong id="agingCritical">$0.00</strong><small>Critical</small></article>
+          </div>
+          <div id="collectionPriorityList" class="collection-priority-list"></div>
+        </section>
+
         <div class="dashboard-grid">
           <section class="panel">
             <div class="panel-header">
@@ -922,6 +939,14 @@
                 <tbody id="reportDebtors"></tbody>
               </table>
             </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Collections Risk</h2>
+              <span class="pill">Aging</span>
+            </div>
+            <div id="reportCollectionsAging" class="report-aging-list"></div>
           </section>
 
           <section class="panel">

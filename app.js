@@ -323,6 +323,12 @@ const els = {
   followupDebtorCount: document.querySelector("#followupDebtorCount"),
   followupQuoteCount: document.querySelector("#followupQuoteCount"),
   followupValue: document.querySelector("#followupValue"),
+  agingCurrent: document.querySelector("#agingCurrent"),
+  agingWatch: document.querySelector("#agingWatch"),
+  agingLate: document.querySelector("#agingLate"),
+  agingCritical: document.querySelector("#agingCritical"),
+  collectionPriorityList: document.querySelector("#collectionPriorityList"),
+  copyCollectionsSummary: document.querySelector("#copyCollectionsSummary"),
   paymentFollowups: document.querySelector("#paymentFollowups"),
   quoteFollowups: document.querySelector("#quoteFollowups"),
   paymentForm: document.querySelector("#paymentForm"),
@@ -397,6 +403,7 @@ const els = {
   reportOutstanding: document.querySelector("#reportOutstanding"),
   reportLowStock: document.querySelector("#reportLowStock"),
   reportDebtors: document.querySelector("#reportDebtors"),
+  reportCollectionsAging: document.querySelector("#reportCollectionsAging"),
   reportStock: document.querySelector("#reportStock"),
   enableBrowserNotifications: document.querySelector("#enableBrowserNotifications"),
   markNotificationsRead: document.querySelector("#markNotificationsRead"),
@@ -769,6 +776,73 @@ function whatsappUrl(phone, text) {
 
 function balanceReminderText(customer) {
   return `Hello ${customer.name}, this is a friendly reminder from ${currentBusinessName()}. Your current balance is ${money(customer.balance, state.business.currency)}. Please make payment when possible. Thank you.`;
+}
+
+function daysBetween(startDate, endDate = new Date()) {
+  const start = new Date(startDate);
+  if (Number.isNaN(start.getTime())) return 0;
+  const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+  return Math.max(0, Math.floor((endDay - startDay) / 86400000));
+}
+
+function agingBucketForDays(days) {
+  if (days > 30) return { key: "critical", label: "Critical", className: "is-critical", nextAction: "Call today and request a payment date" };
+  if (days > 14) return { key: "late", label: "Late", className: "is-late", nextAction: "Send firm reminder and offer payment options" };
+  if (days > 7) return { key: "watch", label: "Watch", className: "is-watch", nextAction: "Send friendly reminder" };
+  return { key: "current", label: "Current", className: "is-current", nextAction: "Keep visible" };
+}
+
+function customerAgingDetails(customer) {
+  const balance = Number(customer?.balance || 0);
+  const openSales = state.sales
+    .filter((sale) => sale.customerId === customer?.id && Number(sale.balance || 0) > 0)
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  const oldest = openSales[0];
+  const days = oldest ? daysBetween(oldest.createdAt) : 0;
+  const bucket = agingBucketForDays(days);
+  return {
+    customer,
+    balance,
+    days,
+    oldestReceipt: oldest?.receipt || "",
+    oldestDate: oldest?.createdAt || "",
+    openSalesCount: openSales.length,
+    ...bucket
+  };
+}
+
+function collectionsAging() {
+  const accounts = state.customers
+    .filter((customer) => Number(customer.balance || 0) > 0)
+    .map(customerAgingDetails)
+    .sort((a, b) => b.days - a.days || b.balance - a.balance);
+  const totals = { current: 0, watch: 0, late: 0, critical: 0 };
+  accounts.forEach((account) => {
+    totals[account.key] += account.balance;
+  });
+  return { accounts, totals };
+}
+
+function collectionsSummaryText() {
+  const aging = collectionsAging();
+  const currency = state.business.currency || "USD";
+  return [
+    `${currentBusinessName()} collections summary`,
+    `Generated: ${todayStamp(new Date().toISOString())}`,
+    "",
+    `0-7 days: ${money(aging.totals.current, currency)}`,
+    `8-14 days: ${money(aging.totals.watch, currency)}`,
+    `15-30 days: ${money(aging.totals.late, currency)}`,
+    `31+ days: ${money(aging.totals.critical, currency)}`,
+    "",
+    "Priority accounts:",
+    ...(aging.accounts.length
+      ? aging.accounts.slice(0, 8).map((account, index) => `${index + 1}. ${account.customer.name} - ${money(account.balance, currency)} - ${account.days} day${account.days === 1 ? "" : "s"} outstanding - ${account.nextAction}`)
+      : ["No customer balances outstanding."]),
+    "",
+    "Powered by Danova Technologies"
+  ].join("\n");
 }
 
 function customerStatementDetails(customer) {
@@ -2290,6 +2364,7 @@ function renderFollowups() {
   els.followupDebtorCount.textContent = `${debtors.length}`;
   els.followupQuoteCount.textContent = `${openQuotes.length}`;
   els.followupValue.textContent = formatCurrencyTotals(followupTotals);
+  renderCollectionsAging();
 
   els.paymentFollowups.innerHTML = debtors.length
     ? debtors
@@ -2378,6 +2453,48 @@ function renderFollowups() {
   });
   document.querySelectorAll("[data-convert-followup]").forEach((button) => {
     button.addEventListener("click", () => convertQuoteToSale(button.dataset.convertFollowup));
+  });
+}
+
+function renderCollectionsAging() {
+  const aging = collectionsAging();
+  const currency = state.business.currency || "USD";
+  els.agingCurrent.textContent = money(aging.totals.current, currency);
+  els.agingWatch.textContent = money(aging.totals.watch, currency);
+  els.agingLate.textContent = money(aging.totals.late, currency);
+  els.agingCritical.textContent = money(aging.totals.critical, currency);
+
+  els.collectionPriorityList.innerHTML = aging.accounts.length
+    ? aging.accounts.slice(0, 6).map((account) => `
+      <article class="collection-priority ${account.className}">
+        <div class="collection-rank">
+          <span>${account.days}</span>
+          <small>days</small>
+        </div>
+        <div class="collection-main">
+          <div class="list-row">
+            <strong>${escapeHtml(account.customer.name)}</strong>
+            <span class="balance">${money(account.balance, currency)}</span>
+          </div>
+          <p>${escapeHtml(account.customer.phone || "No phone saved")} ${account.oldestReceipt ? `- oldest ${escapeHtml(account.oldestReceipt)} from ${todayStamp(account.oldestDate)}` : ""}</p>
+          <small>${account.label}: ${account.nextAction}</small>
+        </div>
+        <div class="collection-actions">
+          <button class="ghost" type="button" data-copy-balance="${account.customer.id}">Copy</button>
+          <button class="ghost" type="button" data-whatsapp-balance="${account.customer.id}">WhatsApp</button>
+          <button class="ghost" type="button" data-pay-balance="${account.customer.id}">Payment</button>
+          <button class="ghost" type="button" data-open-statement="${account.customer.id}">Statement</button>
+        </div>
+      </article>
+    `).join("")
+    : `<div class="empty-state compact-empty">No customer balances outstanding.</div>`;
+
+  document.querySelectorAll("[data-open-statement]").forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedCustomerId = button.dataset.openStatement;
+      showView("customers");
+      renderCustomers();
+    });
   });
 }
 
@@ -2682,6 +2799,8 @@ function renderReports() {
   const totalExpenses = state.expenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
   const outstanding = state.customers.reduce((sum, customer) => sum + Number(customer.balance || 0), 0);
   const lowStockItems = state.items.filter((item) => !item.isService && Number(item.stock || 0) <= 5);
+  const aging = collectionsAging();
+  const currency = state.business.currency || "USD";
 
   els.reportTotalSales.textContent = money(totalSales);
   els.reportTotalReceived.textContent = money(salesPaid + laterPayments);
@@ -2707,6 +2826,21 @@ function renderReports() {
         )
         .join("")
     : `<tr><td colspan="3">No customer balances outstanding.</td></tr>`;
+
+  const agingRows = [
+    ["Current", "0-7 days", aging.totals.current, "is-current"],
+    ["Watch", "8-14 days", aging.totals.watch, "is-watch"],
+    ["Late", "15-30 days", aging.totals.late, "is-late"],
+    ["Critical", "31+ days", aging.totals.critical, "is-critical"]
+  ];
+  els.reportCollectionsAging.innerHTML = agingRows
+    .map(([label, range, value, className]) => `
+      <article class="report-aging-row ${className}">
+        <div><strong>${label}</strong><span>${range}</span></div>
+        <b>${money(value, currency)}</b>
+      </article>
+    `)
+    .join("");
 
   els.reportStock.innerHTML = lowStockItems.length
     ? lowStockItems
@@ -3286,6 +3420,10 @@ els.businessTypeOther.addEventListener("input", () => {
 
 els.applyPreset.addEventListener("click", addPresetItems);
 els.applyPresetSettings.addEventListener("click", addPresetItems);
+els.copyCollectionsSummary.addEventListener("click", async () => {
+  await copyText(collectionsSummaryText());
+  alert("Collections summary copied.");
+});
 
 els.setupForm.addEventListener("submit", (event) => {
   event.preventDefault();
